@@ -1,7 +1,10 @@
 package ru.naumen.collection.task1;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 /**
  * Дано:
@@ -33,9 +36,28 @@ public class Task1 {
 
     /**
      * Возвращает дубликаты пользователей, которые есть в обеих коллекциях
+     * Выбраны коллекции:
+     * ArrayList, т. к. выгоднее изначально выделить необходимую память под дубликаты - это позволит
+     * осуществлять вставку быстрее O(1). За счет того, что ячейки памяти будут выделены предварительно
+     * обращение по индексу и вставка в конец (операция add) будут выполняться за O(1).
+     * HashSet для быстрого поиска элемента O(1) и исключения дубликатов. В классе {@link User}
+     * реализованы функции {@link User#equals(Object)} и {@link User#hashCode()}, стандартными средствами Idea,
+     * что обеспечивает равномерное распределение хэшей и временную сложность операции contains - O(1).
+     * За счет равномерного распределения бакеты не превратятся в длинные списки, что увеличило бы сложность операции
+     * contains до O(n) из-за большого числа коллизий.
+     * Сложность метода по времени O(n), т. к. необходимо пройти все элементы коллекции collA/collB
+     * Сложность метода по памяти O(n), т. к. необходимо преобразовать коллекцию collB во множество.
      */
     public static List<User> findDuplicates(Collection<User> collA, Collection<User> collB) {
-
-        return null;
+        List<User> result = new ArrayList<>(Math.min(collA.size(), collB.size()));
+        Set<User> collBSet = new HashSet<>(collB);
+        for (User user : collA)
+        {
+            if (collBSet.contains(user))
+            {
+                result.add(user);
+            }
+        }
+        return result;
     }
 }
